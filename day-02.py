@@ -3,7 +3,7 @@ def find_invalid_ids():
     invalid_codes = 0
     
     # Open the file for reading
-    with open("day-02-input.txt", "r") as file:
+    with open("test.txt", "r") as file:
         
         # Separate the ranges, delimiting by ','
         data   = file.readline()
@@ -17,19 +17,38 @@ def find_invalid_ids():
             
             # Validate each number in the range, inclusive
             for num in range(lower_bound, upper_bound + 1):
-                curr_num = str(num)
+                num_str = str(num)
                 
-                # Only numbers of even length can be invalid
-                if (len(curr_num) % 2) == 0:
-                    
-                    # Split first and second half, check if they match
-                    midpoint    = len(curr_num) // 2
-                    first_half  = curr_num[:midpoint]
-                    second_half = curr_num[midpoint:]
-                    
-                    if first_half == second_half:
-                        invalid_codes += num
+                if is_invalid_num(num_str):
+                    invalid_codes += num
                         
     print(invalid_codes)
+
+def is_invalid_num(input_str):
+    midpoint = len(input_str) // 2
+    length   = len(input_str)
+    
+    # Check all potential matching brackets (first char, first 2 chars, ... first half)
+    for bracket in range(1, midpoint + 1):
+        pattern       = input_str[0:bracket]
+        index_tracker = 0
+        is_invalid    = True
+        
+        # Check pattern against segments of input string
+        while index_tracker < length:
+            segment = input_str[index_tracker:index_tracker + bracket]
+            
+            # Pattern doesn't match segment, current bracket is valid
+            if pattern != segment:
+                is_invalid = False
+                break
+            
+            index_tracker += bracket
+        
+        # Pattern matched all bracket segments
+        if is_invalid:
+            return True
+        
+    return False
     
 find_invalid_ids()
