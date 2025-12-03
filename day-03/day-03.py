@@ -12,18 +12,29 @@ def calculate_highest_joltage():
             
             length = len(line)
 
-            joltage_ten = max(line)
-            index = line.find(joltage_ten)
+            total_joltage = "" 
+            current       = "0"     # Highest value in window
+            curr_index    = 0       # Index of current number to add
+            last_index    = 0       # Index of last added number
             
-            if length - 1 == index:
-                joltage_ten = max(line[:length - 1])
-                index = line.find(joltage_ten)
+            code_length = 12
+            
+            for idx in range(code_length):
                 
-            joltage_one = max(line[index + 1:])
-            
-            output = f"{joltage_ten}{joltage_one}"
-    
-            total += int(output)
+                # Set bounds and establish sliding window
+                left_bound      = last_index
+                right_bound     = length - (code_length - idx - 1)
+                working_segment = line[left_bound:right_bound]
+                
+                # Find highest value in sliding window
+                current    = max(working_segment)
+                curr_index = working_segment.find(current)
+                    
+                # Add current to total, store index of current
+                total_joltage += current
+                last_index    += curr_index + 1
+
+            total += int(total_joltage)
     
     return total
     
