@@ -2,31 +2,32 @@
 def solve_math_homework():
     
     rows  = []
-    total = 0
     
     with open("day-06-input.txt", "r") as file:
-        
         for line in file:
-            current_row = line.split()
-            rows.append(current_row)
-            
+            rows.append(line.split())
+    
+    total = 0            
     index = 0
     
+    # Iterate through stored operators
     for operator in rows[-1]:
         
         temp_total = 0
         
-        if operator == "*":
+        # Calculate column sum
+        if operator == "+":
+            for row in range(len(rows) - 1):
+                temp_total += int(rows[row][index])
+        
+        # Calculate column product
+        elif operator == "*":
             temp_total = 1
             
             for row in range(len(rows) - 1):
                 temp_total *= int(rows[row][index])
-            
-        elif operator == "+":
-            
-            for row in range(len(rows) - 1):
-                temp_total += int(rows[row][index])
         
+        # Add column total to problem total
         total += temp_total
         index += 1
 
@@ -51,25 +52,25 @@ def vertical_column_layout():
 
         # Iterate through each line in a column
         for row in range(len(lines)):
-            
+
             current = lines[row][column]
-            
+
             if current == " ":
                 continue
-            
+
             if current == "+":
                 calculate_sum = True
-                
             elif current == "*":
                 calculate_product = True
-
             else:
                 current_num *= 10
                 current_num += int(current)
 
-        # Always store read number in num_list
-        num_list.append(current_num)
-        current_num = 0
+        # Store column number if non-zero
+        if current_num != 0:
+            num_list.append(current_num)
+            current_num = 0
+        
         temp_total  = 0    
         
         # Calculate group sum
@@ -84,9 +85,7 @@ def vertical_column_layout():
         elif calculate_product:
             temp_total = 1
             for num in num_list:
-                # Accounts for 0s retrieved from whitespace
-                if num != 0:
-                    temp_total *= num
+                temp_total *= num
                 
             calculate_product = False
             num_list          = []
@@ -95,5 +94,7 @@ def vertical_column_layout():
         total += temp_total
                 
     print(total)
+
+solve_math_homework()
 
 vertical_column_layout()
